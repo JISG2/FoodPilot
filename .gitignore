@@ -1,0 +1,11 @@
+# Ignore everything except remote-dashboard
+/*
+!/apps/
+/apps/*
+!/apps/remote-dashboard/
+
+# Within remote-dashboard, ignore build/output
+/apps/remote-dashboard/node_modules/
+/apps/remote-dashboard/dist/
+/apps/remote-dashboard/.env
+/apps/remote-dashboard/tsconfig.tsbuildinfo
