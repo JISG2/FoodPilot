@@ -33,11 +33,16 @@ export default function AdminOrdenes() {
   const loadOrdenes = useCallback(async () => {
     setLoading(true);
     try {
+      const hoy = new Date();
+      const inicio = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate()).toISOString();
+      const fin = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + 1).toISOString();
+
       const { data } = await supabase
         .from("ordenes")
         .select("id, folio, tipo, mesa, estado, total, fecha_hora, usuario_id, costo_envio")
-        .order("fecha_hora", { ascending: false })
-        .limit(100);
+        .gte("fecha_hora", inicio)
+        .lt("fecha_hora", fin)
+        .order("fecha_hora", { ascending: false });
 
       setOrdenes(data || []);
     } catch (err) {
