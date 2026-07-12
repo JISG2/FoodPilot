@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { supabase, formatCurrency } from "../supabase";
+import { supabase, todayStr, formatCurrency } from "../supabase";
 import { useAuth } from "../context/AuthContext";
 import OrderDetailModal from "../components/OrderDetailModal";
 
@@ -33,15 +33,15 @@ export default function AdminOrdenes() {
   const loadOrdenes = useCallback(async () => {
     setLoading(true);
     try {
-      const hoy = new Date();
-      const inicio = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate()).toISOString();
-      const fin = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + 1).toISOString();
+      const fecha = todayStr();
+      const inicio = `${fecha} 00:00:00`;
+      const fin = `${fecha} 23:59:59`;
 
       const { data } = await supabase
         .from("ordenes")
         .select("id, folio, tipo, mesa, estado, total, fecha_hora, usuario_id, costo_envio")
         .gte("fecha_hora", inicio)
-        .lt("fecha_hora", fin)
+        .lte("fecha_hora", fin)
         .order("fecha_hora", { ascending: false });
 
       setOrdenes(data || []);

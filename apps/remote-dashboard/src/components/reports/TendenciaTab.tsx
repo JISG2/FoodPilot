@@ -29,11 +29,14 @@ export default function TendenciaTab() {
       }
 
       const days: { fecha: string; total: number; num_ordenes: number }[] = [];
-      const start = new Date(desde);
-      const end = new Date(hasta);
-      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-        const key = d.toISOString().slice(0, 10);
+      const [startY, startM, startD] = desde.split("-").map(Number);
+      const [endY, endM, endD] = hasta.split("-").map(Number);
+      const cur = new Date(startY, startM - 1, startD);
+      const end = new Date(endY, endM - 1, endD);
+      while (cur <= end) {
+        const key = `${cur.getFullYear()}-${String(cur.getMonth() + 1).padStart(2, "0")}-${String(cur.getDate()).padStart(2, "0")}`;
         days.push({ fecha: key, total: map[key]?.total || 0, num_ordenes: map[key]?.num_ordenes || 0 });
+        cur.setDate(cur.getDate() + 1);
       }
       setData(days);
     } catch (err) { console.error(err); }
